@@ -15,7 +15,8 @@ class SplashScreen extends StatelessWidget {
           curve: Curves.easeInOut,
           tween: Tween<double>(begin: -100.0, end: 200.0),
           builder: (context, value, child) {
-            return Image.asset("logo.png", width: value, height: value);
+            return Image.asset("assets/images/logo.png",
+                width: value, height: value);
           },
           onCompleted: () {
             Navigator.pushReplacement(
