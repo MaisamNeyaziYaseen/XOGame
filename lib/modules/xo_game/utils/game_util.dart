@@ -1,3 +1,1 @@
-enum gameState { FAIR, USERWIN, COMUTERWIN }
-
-class GameUtil {}
+enum GameState { faiR, userWin, computerWin, winnerNotFound }

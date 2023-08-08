@@ -24,7 +24,7 @@ class GameController extends ChangeNotifier {
   List<int> _board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   List<int> _userMovesIndesies = [];
   int _movesCounter = 0;
-  gameState _gameState = gameState.FAIR;
+  GameState _gameState = GameState.winnerNotFound;
 
   void addUserMove(int index) {
     _userMovesIndesies.add(index);
@@ -35,15 +35,14 @@ class GameController extends ChangeNotifier {
     return -1 * currentPlayer;
   }
 
-  void play(int index, int currentPlayer, Function() onFullBoard,
-      Function() onInvalidMove) {
+  void play(int index, Function() onFullBoard, Function() onInvalidMove) {
     //check if board is full
     if (_movesCounter < 9) {
       //board is not full
       //check if move valid
       if (_board[index] == 0) {
         //valid move
-        if (currentPlayer == 1) {
+        if (_currentPlayer == 1) {
           //user round
           userRound(index);
           addUserMove(index);
@@ -62,6 +61,12 @@ class GameController extends ChangeNotifier {
       //board is full
       onFullBoard();
     }
+    play(
+        generateBestMoveIndex(),
+        //on full board
+        () => onFullBoard(),
+        //on invalid move
+        () => onInvalidMove());
   }
 
   void userRound(int index) {
@@ -99,18 +104,33 @@ class GameController extends ChangeNotifier {
     return bestMoveIndex;
   }
 
-  int checkIfWinnerFound(List<int> board) {
+  void checkIfWinnerFound(List<int> board) {
     for (var list in _winPatternsList) {
       if (_board[list[0]] != 0 &&
           _board[list[0]] == _board[list[1]] &&
           _board[list[0]] == _board[list[2]]) {
-        return _board[list[0]];
+        if (_board[list[0]] == 1) {
+          _gameState = GameState.userWin;
+        } else {
+          _gameState = GameState.computerWin;
+        }
       }
     }
     if (_movesCounter == 9) {
-      return -2; //fair
+      _gameState = GameState.faiR;
     }
-    return -3; //winner not found
+    _gameState = GameState.winnerNotFound;
+    notifyListeners();
+  }
+
+  String showSymbol(int index) {
+    if (_board[index] == 1) {
+      return "X";
+    }
+    if (_board[index] == -1) {
+      return "O";
+    }
+    return "";
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +150,7 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  setGameState(gameState v) {
+  setGameState(GameState v) {
     _gameState = v;
     notifyListeners();
   }
@@ -140,6 +160,6 @@ class GameController extends ChangeNotifier {
   String get getUserSymbol => _userSymbol;
   bool get getisXSelected => _isXSelected;
   bool get getisOSelected => _isOSelected;
-  gameState get getGameState => _gameState;
+  GameState get getGameState => _gameState;
   int get getCurrentPlayer => _currentPlayer;
 }

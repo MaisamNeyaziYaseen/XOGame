@@ -22,7 +22,7 @@ class XOBeachScreen extends ConsumerWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () {
-                      ref.read(gameProvider).play(index, 1,
+                      ref.read(gameProvider).play(index,
                           //on full board
                           () {
                         showDialog(
@@ -45,9 +45,9 @@ class XOBeachScreen extends ConsumerWidget {
                       height: 100,
                       width: 100,
                       color: Colors.grey.withOpacity(0.3),
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          "X",
+                          ref.watch(gameProvider).showSymbol(index),
                           style: TextStyle(color: Colors.red, fontSize: 32),
                         ),
                       ),

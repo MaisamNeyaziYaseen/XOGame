@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:task4/modules/xo_game/controller/game_controller.dart';
 
 class SymbolButton extends ConsumerWidget {
   String symbol;
