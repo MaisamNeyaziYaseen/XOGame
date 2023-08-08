@@ -10,7 +10,7 @@ class GameController extends ChangeNotifier {
   bool _isXSelected = false;
   bool _isOSelected = false;
 
-  int _currentPlayer = 1;
+  int _currentPlayer = 1; //user
   final List<List<int>> _winPatternsList = [
     [0, 1, 2],
     [3, 4, 5],
@@ -28,31 +28,24 @@ class GameController extends ChangeNotifier {
 
   void addUserMove(int index) {
     _userMovesIndesies.add(index);
-    //notifyListeners
+    notifyListeners();
   }
 
-  int togglePlayer(int currentPlayer) {
-    return -1 * currentPlayer;
+  togglePlayer() {
+    _currentPlayer = -1 * _currentPlayer;
+    notifyListeners();
   }
 
-  void play(int index, Function() onFullBoard, Function() onInvalidMove) {
+  void userRound(int index, Function() onFullBoard, Function() onInvalidMove) {
     //check if board is full
     if (_movesCounter < 9) {
       //board is not full
       //check if move valid
       if (_board[index] == 0) {
         //valid move
-        if (_currentPlayer == 1) {
-          //user round
-          userRound(index);
-          addUserMove(index);
-          _movesCounter++;
-        } else {
-          //computer round
-          computerRound(index);
-          addUserMove(index);
-          _movesCounter++;
-        }
+        userMove(index);
+        addUserMove(index);
+        _movesCounter++;
       } else {
         //invalid move
         onInvalidMove();
@@ -61,31 +54,52 @@ class GameController extends ChangeNotifier {
       //board is full
       onFullBoard();
     }
-    play(
-        generateBestMoveIndex(),
-        //on full board
-        () => onFullBoard(),
-        //on invalid move
-        () => onInvalidMove());
+    notifyListeners();
+    computerRound(
+        generateBestMoveIndex(), () => onFullBoard, () => onInvalidMove);
   }
 
-  void userRound(int index) {
+  void computerRound(
+      int? index, Function() onFullBoard, Function() onInvalidMove) {
+    if (index == null) {
+    } else {
+      //check if board is full
+      if (_movesCounter < 9) {
+        //board is not full
+        //check if move valid
+        if (_board[index] == 0) {
+          //valid move
+          computerMove(index);
+          _movesCounter++;
+        } else {
+          //invalid move
+          onInvalidMove();
+        }
+      } else {
+        //board is full
+        onFullBoard();
+      }
+      notifyListeners();
+    }
+  }
+
+  void userMove(int index) {
     _board[index] = 1;
-    togglePlayer(1);
+    togglePlayer();
     notifyListeners();
   }
 
-  void computerRound(int index) {
+  void computerMove(int index) {
     _board[index] = -1;
-    togglePlayer(-1);
+    togglePlayer();
     notifyListeners();
   }
 
-  int generateBestMoveIndex() {
+  int? generateBestMoveIndex() {
     int maxUserMovesCount = 0;
     int userMovesCounter = 0;
-    late int tempBestMoveIndex;
-    late int bestMoveIndex;
+    int? tempBestMoveIndex;
+    int? bestMoveIndex;
     for (var pattern in _winPatternsList) {
       userMovesCounter = 0;
       for (var element in pattern) {
@@ -97,7 +111,9 @@ class GameController extends ChangeNotifier {
       }
       if (userMovesCounter > maxUserMovesCount) {
         maxUserMovesCount = userMovesCounter;
-        bestMoveIndex = tempBestMoveIndex;
+        if (tempBestMoveIndex != null) {
+          bestMoveIndex = tempBestMoveIndex;
+        }
       }
     }
 
