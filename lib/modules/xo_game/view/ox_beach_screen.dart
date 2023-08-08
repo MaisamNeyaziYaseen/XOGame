@@ -23,23 +23,17 @@ class XOBeachScreen extends ConsumerWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () {
-                      ref.read(gameProvider).userRound(index, //on full board
-                          () {
+                      ref.read(gameProvider).move(index);
+
+                      if (ref.watch(gameProvider).gameResultStatus != null) {
                         showDialog(
                             context: context,
                             builder: (context) => SimpleDialog(
                                   title: Text(ref
                                       .watch(gameProvider)
-                                      .getGameState
-                                      .name),
+                                      .gameResultStatus!),
                                 ));
-                      },
-                          //invalid move
-                          () => showDialog(
-                              context: context,
-                              builder: (context) => SimpleDialog(
-                                    title: Text("Invalid Move Index"),
-                                  )));
+                      }
                     },
                     child: Container(
                       height: 100,

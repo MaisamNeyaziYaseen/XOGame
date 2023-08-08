@@ -7,152 +7,112 @@ ChangeNotifierProvider<GameController> gameProvider =
 
 class GameController extends ChangeNotifier {
   String _userSymbol = "X";
+  String _computerSymbol = "O";
   bool _isXSelected = false;
   bool _isOSelected = false;
 
-  int _currentPlayer = 1; //user
-  final List<List<int>> _winPatternsList = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-  List<int> _board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> _userMovesIndesies = [];
-  int _movesCounter = 0;
-  GameState _gameState = GameState.winnerNotFound;
+  var player1Win = 0;
+  var player2Win = 0;
+  var draw = 0;
 
-  void addUserMove(int index) {
-    _userMovesIndesies.add(index);
+  List<int> board = List.generate(9, (index) => 0);
+  int currentPlayer = GameUtil.user;
+  int gameResult = GameUtil.noWinnerYet;
+  bool isComputerPlaying = false;
+  GameUtil ai = GameUtil();
+
+  void reinitialize() {
+    board = List.generate(9, (index) => 0);
+    gameResult = GameUtil.noWinnerYet;
+    currentPlayer = GameUtil.user;
+    //
     notifyListeners();
   }
 
-  togglePlayer() {
-    _currentPlayer = -1 * _currentPlayer;
-    notifyListeners();
-  }
-
-  void userRound(int index, Function() onFullBoard, Function() onInvalidMove) {
-    //check if board is full
-    if (_movesCounter < 9) {
-      //board is not full
-      //check if move valid
-      if (_board[index] == 0) {
-        //valid move
-        userMove(index);
-        addUserMove(index);
-        _movesCounter++;
-      } else {
-        //invalid move
-        onInvalidMove();
-      }
-    } else {
-      //board is full
-      onFullBoard();
-    }
-    notifyListeners();
-    computerRound(
-        generateBestMoveIndex(), () => onFullBoard, () => onInvalidMove);
-  }
-
-  void computerRound(
-      int? index, Function() onFullBoard, Function() onInvalidMove) {
-    if (index == null) {
-    } else {
-      //check if board is full
-      if (_movesCounter < 9) {
-        //board is not full
-        //check if move valid
-        if (_board[index] == 0) {
-          //valid move
-          computerMove(index);
-          _movesCounter++;
-        } else {
-          //invalid move
-          onInvalidMove();
-        }
-      } else {
-        //board is full
-        onFullBoard();
-      }
+  void move(int index) async {
+    if (GameUtil.isValidMove(board, index)) {
+      board[index] = currentPlayer;
+      checkGameWinner();
+      togglePlayer();
+      //
       notifyListeners();
+      if (gameResult == GameUtil.noWinnerYet) {
+        isComputerPlaying = true;
+        final bestMove = ai.play(
+          board,
+          currentPlayer,
+        );
+        board[bestMove] = currentPlayer;
+        isComputerPlaying = false;
+        checkGameWinner();
+        togglePlayer();
+        //
+        notifyListeners();
+      }
     }
   }
 
-  void userMove(int index) {
-    _board[index] = 1;
-    togglePlayer();
+  bool isEnable(int idx) => board[idx] == GameUtil.empty;
+
+  int getDataAt(int idx) => board[idx];
+
+  void togglePlayer() {
+    currentPlayer = GameUtil.togglePlayer(currentPlayer);
+    //
     notifyListeners();
   }
 
-  void computerMove(int index) {
-    _board[index] = -1;
-    togglePlayer();
-    notifyListeners();
+  void checkGameWinner() {
+    gameResult = GameUtil.checkIfWinnerFound(board);
+    switch (gameResult) {
+      case GameUtil.user:
+        player1Win++;
+        //
+        notifyListeners();
+        break;
+      case GameUtil.computer:
+        player2Win++;
+        //
+        notifyListeners();
+        break;
+      case GameUtil.draw:
+        draw++;
+        //
+        notifyListeners();
+        break;
+    }
   }
 
-  int? generateBestMoveIndex() {
-    int maxUserMovesCount = 0;
-    int userMovesCounter = 0;
-    int? tempBestMoveIndex;
-    int? bestMoveIndex;
-    for (var pattern in _winPatternsList) {
-      userMovesCounter = 0;
-      for (var element in pattern) {
-        if (_board[element] == 1) {
-          userMovesCounter++;
-        } else if (_board[element] == 0) {
-          tempBestMoveIndex = element;
-        }
-      }
-      if (userMovesCounter > maxUserMovesCount) {
-        maxUserMovesCount = userMovesCounter;
-        if (tempBestMoveIndex != null) {
-          bestMoveIndex = tempBestMoveIndex;
-        }
+  String? get gameResultStatus {
+    final newGameResult = gameResult;
+    if (newGameResult != GameUtil.noWinnerYet) {
+      if (newGameResult == GameUtil.user) {
+        return "Player 1 wins";
+      } else if (newGameResult == GameUtil.computer) {
+        return "AI wins";
+      } else if (newGameResult == GameUtil.draw) {
+        return "Draw";
       }
     }
-
-    return bestMoveIndex;
-  }
-
-  void checkIfWinnerFound(List<int> board) {
-    for (var list in _winPatternsList) {
-      if (_board[list[0]] != 0 &&
-          _board[list[0]] == _board[list[1]] &&
-          _board[list[0]] == _board[list[2]]) {
-        if (_board[list[0]] == 1) {
-          _gameState = GameState.userWin;
-        } else {
-          _gameState = GameState.computerWin;
-        }
-      }
-    }
-    if (_movesCounter == 9) {
-      _gameState = GameState.faiR;
-    }
-    _gameState = GameState.winnerNotFound;
-    notifyListeners();
+    return null;
   }
 
   String showSymbol(int index) {
-    if (_board[index] == 1) {
-      return "X";
+    if (board[index] == 1) {
+      return _userSymbol;
     }
-    if (_board[index] == -1) {
-      return "O";
+    if (board[index] == -1) {
+      return _computerSymbol;
     }
     return "";
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
-
   setUserSymbol(String v) {
-    _userSymbol = v;
+    if (v == "O") {
+      _userSymbol = v;
+      _computerSymbol = "X";
+    }
+
     notifyListeners();
   }
 
@@ -166,16 +126,8 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  setGameState(GameState v) {
-    _gameState = v;
-    notifyListeners();
-  }
-
-  List<int> get getBoradList => _board;
-  List<List<int>> get getWinPatternList => _winPatternsList;
   String get getUserSymbol => _userSymbol;
   bool get getisXSelected => _isXSelected;
   bool get getisOSelected => _isOSelected;
-  GameState get getGameState => _gameState;
-  int get getCurrentPlayer => _currentPlayer;
+  List<int> get getBoardList => board;
 }
