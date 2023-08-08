@@ -3,13 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task4/modules/xo_game/controller/game_controller.dart';
 import 'package:task4/modules/xo_game/widgets/symbol_button.dart';
 
+import 'ox_beach_screen.dart';
+
 class GetStarted extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Center(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          title: const Center(
             child: Text(
               "Get Started",
               style: TextStyle(fontSize: 30, color: Color(0xffA3CDD8)),
@@ -85,7 +90,12 @@ class GetStarted extends ConsumerWidget {
               if (ref.watch(gameProvider).getisOSelected ||
                   ref.watch(gameProvider).getisXSelected)
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const XOBeachScreen()));
+                  },
                   child: Text(
                     "Start The Game",
                     style: TextStyle(
