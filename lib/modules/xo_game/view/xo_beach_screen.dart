@@ -9,6 +9,13 @@ class XOBeachScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xffF44A97),
+        title: const Text(
+          'XO Board',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
@@ -18,6 +25,7 @@ class XOBeachScreen extends ConsumerWidget {
               GridView.builder(
                 shrinkWrap: true,
                 itemCount: 9,
+                physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3, mainAxisSpacing: 1, crossAxisSpacing: 1),
                 itemBuilder: (BuildContext context, int index) {
@@ -37,7 +45,7 @@ class XOBeachScreen extends ConsumerWidget {
                           //invalid move
                           () => showDialog(
                               context: context,
-                              builder: (context) => SimpleDialog(
+                              builder: (context) => const SimpleDialog(
                                     title: Text("Invalid Move Index"),
                                   )));
                     },
@@ -48,14 +56,50 @@ class XOBeachScreen extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           ref.watch(gameProvider).showSymbol(index),
-                          style: TextStyle(color: Colors.red, fontSize: 32),
+                          style:
+                              ref.watch(gameProvider).showSymbol(index) == 'X'
+                                  ? const TextStyle(
+                                      color: Color(0xffF44A97), fontSize: 32,fontWeight: FontWeight.bold)
+                                  : const TextStyle(
+                                      color: Colors.black, fontSize: 32,fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   );
                 },
               ),
-              Text('It\'s your turn')
+              // Container(
+              //     height: 100,
+              //     width: 200,
+              //     decoration: BoxDecoration(
+              //         color: const Color(0xffF44A97),
+              //         borderRadius: BorderRadius.circular(13),
+              //         boxShadow: [
+              //           BoxShadow(
+              //               color: Colors.grey.withOpacity(0.3),
+              //               spreadRadius: 5,
+              //               blurRadius: 5)
+              //         ]),
+              //     child: const Center(
+              //         child: Text(
+              //       'It\'s your turn',
+              //       style: TextStyle(color: Colors.white, fontSize: 16),
+              //     )))
+
+              ElevatedButton(
+                onPressed: () {
+
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xffF44A97),
+                    elevation: 10,
+                    shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+                    fixedSize: const Size(200, 100)),
+                child: const Text(
+                  "Refresh",
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              )
             ],
           ),
         ),

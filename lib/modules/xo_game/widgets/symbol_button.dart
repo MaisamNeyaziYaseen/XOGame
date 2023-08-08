@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SymbolButton extends ConsumerWidget {
-  String symbol;
-  Function onTap;
-  Color color;
+class SymbolButton extends StatelessWidget {
+  final String symbol;
+  final Color color;
 
-  SymbolButton(
-      {required this.symbol, required this.color, required this.onTap});
+  const SymbolButton(
+      {super.key, required this.symbol, required this.color});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return TextButton(
-      onPressed: () {
-        onTap();
-      },
-      style: TextButton.styleFrom(
-          backgroundColor: color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(3),
-          )),
-      child: Text(
-        symbol,
-        style: TextStyle(
-            color: Colors.white, fontSize: 38, fontWeight: FontWeight.bold),
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      width: 150,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(13)
+      ),
+      child: Center(
+        child: Text(
+          symbol,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 38, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

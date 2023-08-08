@@ -38,6 +38,7 @@ dependencies:
   simple_animations: ^5.0.2
   flutter_riverpod: ^2.3.6
   flutter_launcher_icons: ^0.13.1
+  rename: ^2.1.1
 
 dev_dependencies:
   flutter_test:
