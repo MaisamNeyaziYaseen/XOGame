@@ -30,7 +30,6 @@ class XOBeachScreen extends ConsumerWidget {
                   return InkWell(
                     onTap: () {
                       ref.read(gameProvider).move(index);
-
                       if (ref.watch(gameProvider).gameResultStatus != null) {
                         showDialog(
                             context: context,
@@ -48,14 +47,31 @@ class XOBeachScreen extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           ref.watch(gameProvider).showSymbol(index),
-                          style: TextStyle(color: Colors.red, fontSize: 32),
+                          style: ref.watch(gameProvider).showSymbol(index) == 'X'
+                              ? const TextStyle(
+                              color: Color(0xffF44A97), fontSize: 32,fontWeight: FontWeight.bold)
+                              : const TextStyle(
+                              color: Colors.black, fontSize: 32,fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   );
                 },
               ),
-              Text('It\'s your turn')
+              ElevatedButton(
+                onPressed: () {
+                  ref.read(gameProvider).reinitialize();
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xffF44A97),
+                    elevation: 10,
+                    shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+                    fixedSize: const Size(200, 100)),
+                child: const Text(
+                  "Refresh",
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              )
             ],
           ),
         ),
