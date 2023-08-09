@@ -34,9 +34,21 @@ class XOBeachScreen extends ConsumerWidget {
                         showDialog(
                             context: context,
                             builder: (context) => SimpleDialog(
-                                  title: Text(ref
-                                      .watch(gameProvider)
-                                      .gameResultStatus!),
+                              children: [
+                                ref.watch(gameProvider).draw != 0?
+                                Image.asset("assets/images/ic_draw.png", height: 150, width: 150)
+                                :Image.asset("assets/images/ic_winner.png", height: 150, width: 150),
+                                Text(ref
+                                    .watch(gameProvider)
+                                    .gameResultStatus!,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.grey
+                                  ),
+                                )
+                              ],
                                 ));
                       }
                     },

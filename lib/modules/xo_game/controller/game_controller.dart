@@ -25,12 +25,15 @@ class GameController extends ChangeNotifier {
     board = List.generate(9, (index) => 0);
     gameResult = GameUtil.noWinnerYet;
     currentPlayer = GameUtil.user;
+     player1Win = 0;
+     player2Win = 0;
+     draw = 0;
     //
     notifyListeners();
   }
 
   void move(int index) async {
-    if (GameUtil.isValidMove(board, index)) {
+    if (GameUtil.isValidMove(board, index) && player1Win == 0 && player2Win == 0 && draw == 0) {
       board[index] = currentPlayer;
       checkGameWinner();
       togglePlayer();
@@ -87,7 +90,7 @@ class GameController extends ChangeNotifier {
     final newGameResult = gameResult;
     if (newGameResult != GameUtil.noWinnerYet) {
       if (newGameResult == GameUtil.user) {
-        return "Player 1 wins";
+        return "You are the winner";
       } else if (newGameResult == GameUtil.computer) {
         return "AI wins";
       } else if (newGameResult == GameUtil.draw) {
@@ -116,18 +119,18 @@ class GameController extends ChangeNotifier {
     notifyListeners();
   }
 
-  setisXSelected(bool v) {
+  xSelected(bool v) {
     _isXSelected = v;
     notifyListeners();
   }
 
-  setisOSelected(bool v) {
+  oSelected(bool v) {
     _isOSelected = v;
     notifyListeners();
   }
 
   String get getUserSymbol => _userSymbol;
-  bool get getisXSelected => _isXSelected;
-  bool get getisOSelected => _isOSelected;
+  bool get getXSelected => _isXSelected;
+  bool get getOSelected => _isOSelected;
   List<int> get getBoardList => board;
 }

@@ -33,15 +33,15 @@ class GetStarted extends ConsumerWidget {
                   GestureDetector(
                     onTap: (){
                       ref.watch(gameProvider).setUserSymbol("X");
-                      ref.read(gameProvider).setisXSelected(
-                          !ref.watch(gameProvider).getisXSelected);
-                      if (ref.watch(gameProvider).getisOSelected) {
-                        ref.read(gameProvider).setisOSelected(false);
+                      ref.read(gameProvider).xSelected(
+                          !ref.watch(gameProvider).getXSelected);
+                      if (ref.watch(gameProvider).getOSelected) {
+                        ref.read(gameProvider).oSelected(false);
                       }
                     },
                     child: SymbolButton(
                       symbol: "X",
-                      color: ref.watch(gameProvider).getisXSelected
+                      color: ref.watch(gameProvider).getXSelected
                           ? const Color(0xffF44A97)
                           :  Colors.grey,
                     ),
@@ -49,23 +49,23 @@ class GetStarted extends ConsumerWidget {
                   GestureDetector(
                     onTap: (){
                       ref.watch(gameProvider).setUserSymbol("O");
-                      ref.read(gameProvider).setisOSelected(
-                          !ref.watch(gameProvider).getisOSelected);
-                      if (ref.watch(gameProvider).getisXSelected) {
-                        ref.read(gameProvider).setisXSelected(false);
+                      ref.read(gameProvider).oSelected(
+                          !ref.watch(gameProvider).getOSelected);
+                      if (ref.watch(gameProvider).getXSelected) {
+                        ref.read(gameProvider).xSelected(false);
                       }
                     },
                     child: SymbolButton(
                       symbol: "O",
-                      color: ref.watch(gameProvider).getisOSelected
+                      color: ref.watch(gameProvider).getOSelected
                           ? const Color(0xffF44A97)
                           : Colors.grey,
                     ),
                   )
                 ],
               ),
-              if (ref.watch(gameProvider).getisOSelected ||
-                  ref.watch(gameProvider).getisXSelected)
+              if (ref.watch(gameProvider).getOSelected ||
+                  ref.watch(gameProvider).getXSelected)
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
