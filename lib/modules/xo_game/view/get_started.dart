@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task4/modules/xo_game/controller/game_controller.dart';
 import 'package:task4/modules/xo_game/widgets/symbol_button.dart';
 import 'xo_beach_screen.dart';
+import 'package:intl/locale.dart';
 
 class GetStarted extends ConsumerWidget {
   const GetStarted({super.key});
@@ -18,9 +20,9 @@ class GetStarted extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset('assets/images/logo.png',height: 150,width: 150),
-              const Text(
-                "Choose which symbol do you want to play with",
+              Image.asset('assets/images/logo.png', height: 150, width: 150),
+              Text(
+                "Choose which symbol do you want to play with".tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
@@ -31,7 +33,7 @@ class GetStarted extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       ref.watch(gameProvider).setUserSymbol("X");
                       ref.read(gameProvider).xSelected(
                           !ref.watch(gameProvider).getXSelected);
@@ -43,11 +45,11 @@ class GetStarted extends ConsumerWidget {
                       symbol: "X",
                       color: ref.watch(gameProvider).getXSelected
                           ? const Color(0xffF44A97)
-                          :  Colors.grey,
+                          : Colors.grey,
                     ),
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       ref.watch(gameProvider).setUserSymbol("O");
                       ref.read(gameProvider).oSelected(
                           !ref.watch(gameProvider).getOSelected);
@@ -75,10 +77,11 @@ class GetStarted extends ConsumerWidget {
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xffF44A97),
-                      shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(13)),
                       fixedSize: const Size(double.maxFinite, 50)),
-                  child: const Text(
-                    "Play now",
+                  child: Text(
+                    "Play now".tr(),
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 )

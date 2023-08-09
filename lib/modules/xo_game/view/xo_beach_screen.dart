@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task4/modules/xo_game/controller/game_controller.dart';
@@ -38,9 +39,10 @@ class XOBeachScreen extends ConsumerWidget {
                                 ref.watch(gameProvider).draw != 0?
                                 Image.asset("assets/images/ic_draw.png", height: 150, width: 150)
                                 :Image.asset("assets/images/ic_winner.png", height: 150, width: 150),
-                                Text(ref
+                                Text(Text(ref
                                     .watch(gameProvider)
-                                    .gameResultStatus!,
+                                    .gameResultStatus!
+                                    .tr(),
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontSize: 18,
@@ -80,10 +82,22 @@ class XOBeachScreen extends ConsumerWidget {
                     shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
                     fixedSize: const Size(200, 100)),
                 child: const Text(
-                  "Refresh",
+                  "Refresh".tr(),
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
-              )
+              ),
+              IconButton(
+                  onPressed: () {
+                    if (context.locale == const Locale('en')) {
+                      context.setLocale(const Locale('ar'));
+                    } else {
+                      context.setLocale(const Locale('en'));
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.language,
+                    color: Colors.blue,
+                  )),
             ],
           ),
         ),
