@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task4/modules/xo_game/controller/game_controller.dart';
+
 class XOBeachScreen extends ConsumerWidget {
   const XOBeachScreen({Key? key}) : super(key: key);
 
@@ -36,7 +38,8 @@ class XOBeachScreen extends ConsumerWidget {
                             builder: (context) => SimpleDialog(
                                   title: Text(ref
                                       .watch(gameProvider)
-                                      .gameResultStatus!),
+                                      .gameResultStatus!
+                                      .tr()),
                                 ));
                       }
                     },
@@ -47,11 +50,16 @@ class XOBeachScreen extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           ref.watch(gameProvider).showSymbol(index),
-                          style: ref.watch(gameProvider).showSymbol(index) == 'X'
-                              ? const TextStyle(
-                              color: Color(0xffF44A97), fontSize: 32,fontWeight: FontWeight.bold)
-                              : const TextStyle(
-                              color: Colors.black, fontSize: 32,fontWeight: FontWeight.bold),
+                          style:
+                              ref.watch(gameProvider).showSymbol(index) == 'X'
+                                  ? const TextStyle(
+                                      color: Color(0xffF44A97),
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.bold)
+                                  : const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -65,13 +73,26 @@ class XOBeachScreen extends ConsumerWidget {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xffF44A97),
                     elevation: 10,
-                    shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(13)),
                     fixedSize: const Size(200, 100)),
-                child: const Text(
-                  "Refresh",
+                child: Text(
+                  "Refresh".tr(),
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
-              )
+              ),
+              IconButton(
+                  onPressed: () {
+                    if (context.locale == const Locale('en')) {
+                      context.setLocale(const Locale('ar'));
+                    } else {
+                      context.setLocale(const Locale('en'));
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.language,
+                    color: Colors.blue,
+                  )),
             ],
           ),
         ),
